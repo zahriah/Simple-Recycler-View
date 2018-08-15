@@ -1,5 +1,7 @@
 package my.edu.utem.simplerecyclerview;
 
+import android.content.Context;
+import android.content.res.Resources;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -8,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
@@ -17,7 +20,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         recyclerView = findViewById(R.id.recyclerview);
-        CustomAdapter adapter = new CustomAdapter();
+        CustomAdapter adapter = new CustomAdapter(getApplicationContext());
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
     }
@@ -33,7 +36,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public class CustomAdapter extends RecyclerView.Adapter<CustomViewHolder> {
-        public CustomAdapter(){}
+        public final String[] restaurantNames;
+        public CustomAdapter(Context context){
+            Resources resources = context.getResources();
+            restaurantNames = resources.getStringArray(R.array.restaurant_name);
+        }
         @NonNull
         @Override
         public CustomViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
@@ -42,12 +49,13 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(@NonNull CustomViewHolder customViewHolder, int i) {
-            customViewHolder.wordTextView.setText("This is row " + i);
+            customViewHolder.wordTextView.setText(restaurantNames[i]);
+
         }
 
         @Override
         public int getItemCount() {
-            return 10;
+            return restaurantNames.length;
         }
     }
 }
